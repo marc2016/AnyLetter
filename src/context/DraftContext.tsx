@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode, useRef } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode, useRef } from "react";
 import { Draft } from "../models/draft";
 import { loadAllDrafts, saveDraftFile, deleteDraftFile } from "../storage/adapter";
+import { getCurrentWindow } from '@tauri-apps/api/window';
 
 interface DraftContextType {
   drafts: Draft[];
@@ -16,7 +17,7 @@ export function DraftProvider({ children }: { children: ReactNode }) {
   const [drafts, setDrafts] = useState<Draft[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
-  const saveTimers = useRef<{ [id: string]: ReturnType<typeof setTimeout> }>({});
+  const pendingSaves = useRef<{ [id: string]: { timer: ReturnType<typeof setTimeout>, draft: Draft } }>({});
 
   useEffect(() => {
     loadAllDrafts()
@@ -28,6 +29,38 @@ export function DraftProvider({ children }: { children: ReactNode }) {
         console.warn("Failed to load drafts (might be running in web mode)", err);
         setIsLoading(false);
       });
+
+    let unlisten: (() => void) | undefined;
+    async function setupCloseHandler() {
+      try {
+        const appWindow = getCurrentWindow();
+        unlisten = await appWindow.onCloseRequested(async (event) => {
+          const pendingIds = Object.keys(pendingSaves.current);
+          if (pendingIds.length > 0) {
+            event.preventDefault(); // Prevent immediate close
+            
+            // Flush all pending writes
+            const promises = pendingIds.map(id => {
+              const { timer, draft } = pendingSaves.current[id];
+              clearTimeout(timer);
+              delete pendingSaves.current[id];
+              return saveDraftFile(draft);
+            });
+            
+            await Promise.all(promises);
+            await appWindow.destroy(); // Close it safely after flush
+          }
+        });
+      } catch (err) {
+        // Ignored if not in Tauri (e.g. browser)
+      }
+    }
+    
+    setupCloseHandler();
+
+    return () => {
+      if (unlisten) unlisten();
+    };
   }, []);
 
   const addDraft = (draft: Draft) => {
@@ -47,14 +80,16 @@ export function DraftProvider({ children }: { children: ReactNode }) {
       });
       
       if (updatedDraft) {
-        if (saveTimers.current[id]) {
-          clearTimeout(saveTimers.current[id]);
+        if (pendingSaves.current[id]) {
+          clearTimeout(pendingSaves.current[id].timer);
         }
         const draftToSave = updatedDraft;
-        saveTimers.current[id] = setTimeout(() => {
+        const timer = setTimeout(() => {
           saveDraftFile(draftToSave).catch((err) => console.warn("Autosave failed", err));
-          delete saveTimers.current[id];
+          delete pendingSaves.current[id];
         }, 1000); // 1s debounce
+        
+        pendingSaves.current[id] = { timer, draft: draftToSave };
       }
       return next;
     });
@@ -62,9 +97,9 @@ export function DraftProvider({ children }: { children: ReactNode }) {
 
   const deleteDraft = (id: string) => {
     setDrafts((prev) => prev.filter((d) => d.id !== id));
-    if (saveTimers.current[id]) {
-      clearTimeout(saveTimers.current[id]);
-      delete saveTimers.current[id];
+    if (pendingSaves.current[id]) {
+      clearTimeout(pendingSaves.current[id].timer);
+      delete pendingSaves.current[id];
     }
     deleteDraftFile(id).catch((err) => console.warn("Delete failed", err));
   };
