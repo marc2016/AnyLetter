@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card } from 'primereact/card';
 
 interface FileGridItemProps {
   id: string;
@@ -8,28 +9,60 @@ interface FileGridItemProps {
   onDoubleClick: (id: string, type: 'file' | 'folder') => void;
   onContextMenu: (e: React.MouseEvent, id: string, type: 'file' | 'folder') => void;
   subtitle?: string;
+  snippet?: string;
+  itemCount?: number;
 }
 
-export function FileGridItem({ id, name, type, updatedAt, onDoubleClick, onContextMenu, subtitle }: FileGridItemProps) {
-  const icon = type === 'folder' ? 'pi-folder' : 'pi-file';
+export function FileGridItem({ id, name, type, updatedAt, onDoubleClick, onContextMenu, subtitle, snippet, itemCount }: FileGridItemProps) {
+  const isFolder = type === 'folder';
+  const icon = isFolder ? 'pi-folder' : 'pi-file';
   const dateStr = new Date(updatedAt).toLocaleDateString();
 
+  const header = (
+    <div className="flex align-items-center gap-2 px-3 pt-3 pb-2">
+      <i className={`pi ${icon} text-primary text-xl`}></i>
+      <div className="font-semibold text-900 text-overflow-ellipsis overflow-hidden white-space-nowrap" title={name}>
+        {name}
+      </div>
+    </div>
+  );
+
   return (
-    <div 
-      className="flex flex-column align-items-center p-3 cursor-pointer hover:surface-hover border-round transition-colors transition-duration-150 select-none"
+    <div
       onDoubleClick={() => onDoubleClick(id, type)}
       onContextMenu={(e) => onContextMenu(e, id, type)}
-      style={{ width: '120px' }}
+      className="cursor-pointer select-none h-full"
     >
-      <div className="flex align-items-center justify-content-center mb-2" style={{ height: '64px' }}>
-        <i className={`pi ${icon} text-primary`} style={{ fontSize: '3rem' }}></i>
-      </div>
-      <span className="text-center font-semibold text-900 text-overflow-ellipsis overflow-hidden white-space-nowrap w-full" title={name}>
-        {name}
-      </span>
-      <span className="text-center text-500 text-xs mt-1">
-        {subtitle || dateStr}
-      </span>
+      <Card 
+        header={header} 
+        subTitle={dateStr}
+        className="h-full shadow-2 hover:shadow-4 transition-all transition-duration-150 border-1 surface-border"
+        pt={{
+          body: { className: 'p-3 pt-0 h-full flex flex-column' },
+          subTitle: { className: 'text-xs text-500 mt-1 mb-2' },
+          content: { className: 'flex-1 py-0' }
+        }}
+      >
+        <div className="flex flex-column h-full">
+          {isFolder ? (
+            <div className="text-600 font-medium text-sm flex-1">
+              {itemCount !== undefined ? `${itemCount} item${itemCount !== 1 ? 's' : ''}` : 'Folder'}
+            </div>
+          ) : (
+            <div className="flex-1">
+              {subtitle && <div className="text-xs font-semibold text-600 mb-2">{subtitle}</div>}
+              <div className="text-sm text-700 line-height-3" style={{ 
+                display: '-webkit-box', 
+                WebkitLineClamp: 3, 
+                WebkitBoxOrient: 'vertical', 
+                overflow: 'hidden' 
+              }}>
+                {snippet || <span className="text-400 font-italic">No content</span>}
+              </div>
+            </div>
+          )}
+        </div>
+      </Card>
     </div>
   );
 }

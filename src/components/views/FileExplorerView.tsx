@@ -187,29 +187,38 @@ export function FileExplorerView() {
         </div>
       ) : (
         <FileGrid>
-          {currentContent.folders.map(folder => (
-            <FileGridItem 
-              key={folder.id}
-              id={folder.id}
-              name={folder.name}
-              type="folder"
-              updatedAt={folder.updatedAt}
-              onDoubleClick={handleItemDoubleClick}
-              onContextMenu={handleContextMenu}
-            />
-          ))}
-          {currentContent.drafts.map(draft => (
-            <FileGridItem 
-              key={draft.id}
-              id={draft.id}
-              name={draft.subject || 'Untitled Letter'}
-              subtitle={draft.recipient || 'No recipient'}
-              type="file"
-              updatedAt={draft.updatedAt}
-              onDoubleClick={handleItemDoubleClick}
-              onContextMenu={handleContextMenu}
-            />
-          ))}
+          {currentContent.folders.map(folder => {
+            const itemCount = drafts.filter(d => d.parentId === folder.id).length + folders.filter(f => f.parentId === folder.id).length;
+            return (
+              <FileGridItem 
+                key={folder.id}
+                id={folder.id}
+                name={folder.name}
+                type="folder"
+                updatedAt={folder.updatedAt}
+                itemCount={itemCount}
+                onDoubleClick={handleItemDoubleClick}
+                onContextMenu={handleContextMenu}
+              />
+            );
+          })}
+          {currentContent.drafts.map(draft => {
+            let snippet = draft.body?.trim().substring(0, 100) || '';
+            if (draft.body && draft.body.trim().length > 100) snippet += '...';
+            return (
+              <FileGridItem 
+                key={draft.id}
+                id={draft.id}
+                name={draft.subject || 'Untitled Letter'}
+                subtitle={draft.recipient || 'No recipient'}
+                snippet={snippet}
+                type="file"
+                updatedAt={draft.updatedAt}
+                onDoubleClick={handleItemDoubleClick}
+                onContextMenu={handleContextMenu}
+              />
+            );
+          })}
         </FileGrid>
       )}
 
