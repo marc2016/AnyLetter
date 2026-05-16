@@ -1,13 +1,18 @@
 import { createContext, useContext, useState, useEffect, ReactNode, useRef } from "react";
-import { Draft } from "../models/draft";
-import { loadAllDrafts, saveDraftFile, deleteDraftFile } from "../storage/adapter";
+import { Draft } from "../models/Draft";
+import { Folder } from "../models/Folder";
+import { loadAllDrafts, saveDraftFile, deleteDraftFile, loadAllFolders, saveFolderFile, deleteFolderFile } from "../storage/adapter";
 import { getCurrentWindow } from '@tauri-apps/api/window';
 
 interface DraftContextType {
   drafts: Draft[];
+  folders: Folder[];
   addDraft: (draft: Draft) => void;
   updateDraft: (id: string, updates: Partial<Draft>) => void;
   deleteDraft: (id: string) => void;
+  addFolder: (folder: Folder) => void;
+  updateFolder: (id: string, updates: Partial<Folder>) => void;
+  deleteFolder: (id: string) => void;
   isLoading: boolean;
 }
 
@@ -15,18 +20,20 @@ const DraftContext = createContext<DraftContextType | undefined>(undefined);
 
 export function DraftProvider({ children }: { children: ReactNode }) {
   const [drafts, setDrafts] = useState<Draft[]>([]);
+  const [folders, setFolders] = useState<Folder[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
   const pendingSaves = useRef<{ [id: string]: { timer: ReturnType<typeof setTimeout>, draft: Draft } }>({});
 
   useEffect(() => {
-    loadAllDrafts()
-      .then((loadedDrafts) => {
+    Promise.all([loadAllDrafts(), loadAllFolders()])
+      .then(([loadedDrafts, loadedFolders]) => {
         setDrafts(loadedDrafts);
+        setFolders(loadedFolders);
         setIsLoading(false);
       })
       .catch((err) => {
-        console.warn("Failed to load drafts (might be running in web mode)", err);
+        console.warn("Failed to load storage data (might be running in web mode)", err);
         setIsLoading(false);
       });
 
@@ -104,8 +111,39 @@ export function DraftProvider({ children }: { children: ReactNode }) {
     deleteDraftFile(id).catch((err) => console.warn("Delete failed", err));
   };
 
+  const addFolder = (folder: Folder) => {
+    setFolders((prev) => [...prev, folder]);
+    saveFolderFile(folder).catch((err) => console.warn("Folder save failed", err));
+  };
+
+  const updateFolder = (id: string, updates: Partial<Folder>) => {
+    setFolders((prev) => prev.map((f) => {
+      if (f.id === id) {
+        const updated = { ...f, ...updates, updatedAt: Date.now() };
+        saveFolderFile(updated).catch((err) => console.warn("Folder update failed", err));
+        return updated;
+      }
+      return f;
+    }));
+  };
+
+  const deleteFolder = (id: string) => {
+    setFolders((prev) => prev.filter((f) => f.id !== id));
+    deleteFolderFile(id).catch((err) => console.warn("Folder delete failed", err));
+  };
+
   return (
-    <DraftContext.Provider value={{ drafts, addDraft, updateDraft, deleteDraft, isLoading }}>
+    <DraftContext.Provider value={{ 
+      drafts, 
+      folders, 
+      addDraft, 
+      updateDraft, 
+      deleteDraft, 
+      addFolder, 
+      updateFolder, 
+      deleteFolder, 
+      isLoading 
+    }}>
       {children}
     </DraftContext.Provider>
   );

@@ -5,4 +5,5 @@ export interface Draft {
   body: string;
   createdAt: number;
   updatedAt: number;
+  parentId: string | null;
 }

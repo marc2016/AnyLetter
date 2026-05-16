@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDrafts } from "../../context/DraftContext";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
@@ -9,6 +9,7 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 export function Editor() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { drafts, addDraft, updateDraft, deleteDraft } = useDrafts();
 
   const [recipient, setRecipient] = useState("");
@@ -38,6 +39,7 @@ export function Editor() {
   const handleSave = () => {
     if (isNew) {
       const newId = crypto.randomUUID();
+      const parentId = location.state?.parentId || null;
       addDraft({
         id: newId,
         recipient,
@@ -45,6 +47,7 @@ export function Editor() {
         body,
         createdAt: Date.now(),
         updatedAt: Date.now(),
+        parentId
       });
       navigate(`/letters/${newId}`, { replace: true });
     } else {
