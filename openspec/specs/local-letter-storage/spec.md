@@ -22,11 +22,11 @@ The system SHALL persist draft changes to that draft’s JSON file after the use
 - **THEN** the system writes the current draft state to the corresponding JSON file in local storage
 
 ### Requirement: Restore drafts on app startup
-The system MUST discover all draft JSON files in the storage directory during application startup and load every valid draft into application state.
+The system MUST discover all draft and folder JSON files (or unified storage files) in the storage directory during application startup and load every valid item into application state, maintaining their hierarchical relationships.
 
-#### Scenario: Multiple draft files exist
-- **WHEN** the user launches the app and several valid draft JSON files exist in the directory
-- **THEN** the system loads all valid drafts and displays them in the draft list
+#### Scenario: Multiple draft and folder files exist
+- **WHEN** the user launches the app and several valid items exist in the directory
+- **THEN** the system loads all valid items and reconstructs the hierarchy based on `parentId`
 
 ### Requirement: Delete draft removes its file
 The system SHALL remove a draft’s JSON file from local storage when that draft is deleted in the application.
@@ -41,4 +41,18 @@ The system SHALL handle invalid or corrupted individual draft files without cras
 #### Scenario: One draft file is invalid
 - **WHEN** the app reads a malformed or incompatible JSON file for a single draft
 - **THEN** the system skips that draft or recovers with an empty state for that id only, preserves a recoverable backup of the invalid file if applicable, and continues loading remaining drafts
+
+### Requirement: Support hierarchical storage via Folders
+The system SHALL support creating, renaming, and deleting Folder entities, and saving them to local storage.
+
+#### Scenario: User creates a folder
+- **WHEN** the user creates a new folder
+- **THEN** the folder metadata is persisted to local storage
+
+### Requirement: Parent-child relationship for drafts and folders
+The system SHALL support a `parentId` field on drafts and folders to establish a hierarchical structure.
+
+#### Scenario: User moves a draft into a folder
+- **WHEN** the user moves a draft to a specific folder
+- **THEN** the draft's `parentId` is updated to the folder's ID and persisted
 
