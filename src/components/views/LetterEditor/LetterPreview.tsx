@@ -1,4 +1,4 @@
-import { LetterData } from "./LetterEditor";
+import { LetterData } from "../../../models/letterData";
 
 interface LetterPreviewProps {
   data: LetterData;

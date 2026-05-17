@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode, useRef } from "react";
-import { Draft } from "../models/Draft";
+import { Draft } from "../models/draft";
+
+export const AUTOSAVE_DEBOUNCE_MS = 2500;
 import { Folder } from "../models/Folder";
 import { loadAllDrafts, saveDraftFile, deleteDraftFile, loadAllFolders, saveFolderFile, deleteFolderFile } from "../storage/adapter";
 import { getCurrentWindow } from '@tauri-apps/api/window';
@@ -94,7 +96,7 @@ export function DraftProvider({ children }: { children: ReactNode }) {
         const timer = setTimeout(() => {
           saveDraftFile(draftToSave).catch((err) => console.warn("Autosave failed", err));
           delete pendingSaves.current[id];
-        }, 1000); // 1s debounce
+        }, AUTOSAVE_DEBOUNCE_MS);
         
         pendingSaves.current[id] = { timer, draft: draftToSave };
       }

@@ -47,7 +47,7 @@ function TestComponent() {
   return (
     <div>
       <div data-testid="count">{drafts.length}</div>
-      <button onClick={() => addDraft({ id: '1', recipient: 'Alice', subject: 'Hello', body: 'World', createdAt: 1, updatedAt: 1 })}>Add</button>
+      <button onClick={() => addDraft({ id: '1', parentId: null, recipient: 'Alice', subject: 'Hello', content: 'World', sender: '', notes: '', info: '', date: null, footer: '', createdAt: 1, updatedAt: 1 })}>Add</button>
       <button onClick={() => updateDraft('1', { subject: 'Updated' })}>Update</button>
       <button onClick={() => deleteDraft('1')}>Delete</button>
     </div>
@@ -76,7 +76,7 @@ describe('DraftContext Integration', () => {
     
     await waitFor(() => {
       expect(JSON.parse(mockFiles['drafts/1.json']).subject).toBe('Updated');
-    }, { timeout: 2000 });
+    }, { timeout: 3500 });
 
     act(() => { screen.getByText('Delete').click(); });
     expect(screen.getByTestId('count').textContent).toBe('0');

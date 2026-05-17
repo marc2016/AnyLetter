@@ -1,6 +1,7 @@
 import { BaseDirectory, join } from '@tauri-apps/api/path';
 import { exists, mkdir, readTextFile, writeTextFile, readDir, remove } from '@tauri-apps/plugin-fs';
-import { Draft } from '../models/Draft';
+import { Draft } from '../models/draft';
+import { normalizeDraftFromStorage } from '../utils/letterDraftMapping';
 import { Folder } from '../models/Folder';
 
 const DRAFTS_DIR = 'drafts';
@@ -61,17 +62,10 @@ export async function loadAllDrafts(): Promise<Draft[]> {
         try {
           contents = await readTextFile(filePath, { baseDir: BaseDirectory.AppData });
           const data = JSON.parse(contents);
-          
-          if (data.id && data.createdAt) {
-            drafts.push({
-              id: data.id,
-              recipient: data.recipient || '',
-              subject: data.subject || '',
-              body: data.body || '',
-              createdAt: data.createdAt,
-              updatedAt: data.updatedAt || data.createdAt,
-              parentId: data.parentId || null
-            });
+          const draft = normalizeDraftFromStorage(data);
+
+          if (draft) {
+            drafts.push(draft);
           } else {
             throw new Error("Missing required schema fields");
           }

@@ -3,7 +3,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { InputText } from "primereact/inputtext";
 import { Calendar } from "primereact/calendar";
 import { Editor } from "primereact/editor";
-import { LetterData } from "./LetterEditor";
+import { LetterData } from "../../../models/letterData";
 
 interface LetterEditorFormProps {
   data: LetterData;

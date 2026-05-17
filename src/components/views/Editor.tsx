@@ -24,7 +24,7 @@ export function Editor() {
       if (draft) {
         setRecipient(draft.recipient);
         setSubject(draft.subject);
-        setBody(draft.body);
+        setBody(draft.content || draft.body || '');
       } else {
         // Not found
         navigate("/letters", { replace: true });
@@ -44,14 +44,19 @@ export function Editor() {
         id: newId,
         recipient,
         subject,
-        body,
+        content: body,
+        sender: "",
+        notes: "",
+        info: "",
+        date: null,
+        footer: "",
         createdAt: Date.now(),
         updatedAt: Date.now(),
-        parentId
+        parentId,
       });
       navigate(`/letters/${newId}`, { replace: true });
     } else {
-      updateDraft(id, { recipient, subject, body });
+      updateDraft(id, { recipient, subject, content: body });
     }
   };
 

@@ -197,8 +197,9 @@ export function FileExplorerView() {
             );
           })}
           {currentContent.drafts.map(draft => {
-            let snippet = draft.body?.trim().substring(0, 100) || '';
-            if (draft.body && draft.body.trim().length > 100) snippet += '...';
+            const text = (draft.content || draft.body || '').trim();
+            let snippet = text.substring(0, 100);
+            if (text.length > 100) snippet += '...';
             return (
               <FileGridItem 
                 key={draft.id}
