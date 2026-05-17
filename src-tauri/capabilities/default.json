@@ -11,14 +11,15 @@
     "opener:default",
     "dialog:default",
     "fs:default",
+    "fs:allow-appdata-write-recursive",
     "fs:allow-write-file",
+    "fs:allow-write-text-file",
+    "fs:allow-remove",
     {
       "identifier": "fs:scope",
       "allow": [
         { "path": "$APPDATA" },
-        { "path": "$APPDATA/*" },
-        { "path": "$APPDATA/drafts" },
-        { "path": "$APPDATA/drafts/*" },
+        { "path": "$APPDATA/**" },
         { "path": "$HOME/**" },
         { "path": "$DOCUMENT/**" },
         { "path": "$DOWNLOAD/**" },
