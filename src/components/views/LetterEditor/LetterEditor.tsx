@@ -79,7 +79,7 @@ export function LetterEditor() {
         <SplitterPanel
           size={50}
           minSize={30}
-          className="p-4 surface-200 flex align-items-center justify-content-center overflow-hidden"
+          className="p-0 surface-200 overflow-hidden"
         >
           <LetterPreview data={letterData} focusedField={focusedField} />
         </SplitterPanel>

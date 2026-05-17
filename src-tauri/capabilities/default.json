@@ -8,14 +8,20 @@
   "permissions": [
     "core:default",
     "opener:default",
+    "dialog:default",
     "fs:default",
+    "fs:allow-write-file",
     {
       "identifier": "fs:scope",
       "allow": [
         { "path": "$APPDATA" },
         { "path": "$APPDATA/*" },
         { "path": "$APPDATA/drafts" },
-        { "path": "$APPDATA/drafts/*" }
+        { "path": "$APPDATA/drafts/*" },
+        { "path": "$HOME/**" },
+        { "path": "$DOCUMENT/**" },
+        { "path": "$DOWNLOAD/**" },
+        { "path": "$DESKTOP/**" }
       ]
     }
   ]
