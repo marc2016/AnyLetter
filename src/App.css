@@ -27,3 +27,8 @@ html, body, #root {
 .app-shell-breadcrumb .p-menuitem-link {
   padding: 0.25rem 0.5rem;
 }
+
+.app-lang-flag {
+  font-size: 1.125rem;
+  line-height: 1;
+}

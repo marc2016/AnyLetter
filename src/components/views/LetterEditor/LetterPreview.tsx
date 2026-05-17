@@ -1,4 +1,6 @@
+import { useTranslation } from "react-i18next";
 import { LetterData } from "../../../models/letterData";
+import { formatAppDate } from "../../../utils/formatAppDate";
 
 interface LetterPreviewProps {
   data: LetterData;
@@ -6,9 +8,11 @@ interface LetterPreviewProps {
 }
 
 export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
+  const { t } = useTranslation("preview");
+  const displayDate = data.date ? formatAppDate(data.date) : formatAppDate(new Date());
+
   return (
     <div className="w-full h-full overflow-auto flex align-items-start justify-content-center p-4">
-      {/* Scope styles for premium highlighting and transitions */}
       <style>{`
         .preview-field {
           transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -22,7 +26,6 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
           background-color: rgba(59, 130, 246, 0.04);
           box-shadow: 0 0 12px rgba(59, 130, 246, 0.15);
         }
-        /* Style list bullets and text inside rich text container to look neat */
         .preview-rich-content ul, .preview-rich-content ol {
           padding-left: 1.5rem;
           margin: 0.5rem 0;
@@ -32,7 +35,7 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
         }
       `}</style>
 
-      <div 
+      <div
         className="bg-white shadow-4 relative text-color-secondary overflow-hidden select-none"
         style={{
           width: "210mm",
@@ -43,27 +46,22 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
           color: "#2c3e50"
         }}
       >
-        {/* Fold and Punch Marks */}
-        {/* Fold Mark 1 (105mm -> ~35.35% height) */}
         <div 
           className="absolute left-0" 
           style={{ top: "35.35%", width: "15px", height: "1px", backgroundColor: "#a0aec0" }} 
-          title="Falzmarke 1" 
+          title={t("foldMark1")} 
         />
-        {/* Punch Hole Mark (148.5mm -> 50% height) */}
         <div 
           className="absolute left-0" 
           style={{ top: "50%", width: "10px", height: "1px", backgroundColor: "#a0aec0" }} 
-          title="Lochmarke" 
+          title={t("punchMark")} 
         />
-        {/* Fold Mark 2 (210mm -> ~70.7% height) */}
         <div 
           className="absolute left-0" 
           style={{ top: "70.7%", width: "15px", height: "1px", backgroundColor: "#a0aec0" }} 
-          title="Falzmarke 2" 
+          title={t("foldMark2")} 
         />
 
-        {/* Sender Line (Rücksendeangabe) */}
         <div 
           className={`absolute preview-field ${focusedField === 'sender' ? 'active-highlight' : ''}`}
           style={{ 
@@ -78,10 +76,9 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
             textOverflow: "ellipsis"
           }}
         >
-          {data.sender ? data.sender.replace(/\n/g, ' • ') : "Absenderzeile (Zusatz- und Vermerkzone)"}
+          {data.sender ? data.sender.replace(/\n/g, ' • ') : t("senderPlaceholder")}
         </div>
 
-        {/* Notes Block */}
         <div 
           className={`absolute preview-field ${focusedField === 'notes' ? 'active-highlight' : ''}`}
           style={{ 
@@ -93,10 +90,9 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
             color: "#7f8c8d"
           }}
         >
-          {data.notes || "Zusatz- und Vermerkzone (z.B. Einschreiben)"}
+          {data.notes || t("notesPlaceholder")}
         </div>
 
-        {/* Recipient Address */}
         <div 
           className={`absolute preview-field ${focusedField === 'recipient' ? 'active-highlight' : ''}`}
           style={{ 
@@ -108,10 +104,9 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
             whiteSpace: "pre-line"
           }}
         >
-          {data.recipient || "Empfängeradresse\nName des Empfängers\nStraße und Hausnummer\nPLZ und Ort"}
+          {data.recipient || t("recipientPlaceholder")}
         </div>
 
-        {/* Date */}
         <div 
           className={`absolute preview-field text-right ${focusedField === 'date' ? 'active-highlight' : ''}`}
           style={{ 
@@ -121,10 +116,9 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
             fontSize: "1.5cqw"
           }}
         >
-          {data.date ? data.date.toLocaleDateString('de-DE') : new Date().toLocaleDateString('de-DE')}
+          {displayDate}
         </div>
 
-        {/* Info Block below date */}
         <div 
           className={`absolute preview-field ${focusedField === 'info' ? 'active-highlight' : ''}`}
           style={{ 
@@ -137,10 +131,9 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
             color: "#7f8c8d"
           }}
         >
-          {data.info || "Ihr Zeichen:\nUnser Zeichen:\nTelefon:\nE-Mail:"}
+          {data.info || t("infoPlaceholder")}
         </div>
 
-        {/* Subject (Betreff) */}
         <div 
           className={`absolute preview-field font-bold ${focusedField === 'subject' ? 'active-highlight' : ''}`}
           style={{ 
@@ -151,10 +144,9 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
             color: "#2c3e50"
           }}
         >
-          {data.subject || "Betreffzeile"}
+          {data.subject || t("subjectPlaceholder")}
         </div>
 
-        {/* Body Content */}
         <div 
           className={`absolute preview-field preview-rich-content ${focusedField === 'content' ? 'active-highlight' : ''}`}
           style={{ 
@@ -172,15 +164,14 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
             <div dangerouslySetInnerHTML={{ __html: data.content }} />
           ) : (
             <div style={{ color: "#bdc3c7" }}>
-              <p>Sehr geehrte Damen und Herren,</p>
-              <p>hier steht Ihr Brieftext. Der Text wird mit allen Formatierungen aus dem Editor live auf das DIN A4 Blatt projiziert.</p>
-              <p>Mit freundlichen Grüßen,</p>
-              <p>Ihr Name</p>
+              <p>{t("sampleGreeting")}</p>
+              <p>{t("sampleBody")}</p>
+              <p>{t("sampleClosing")}</p>
+              <p>{t("sampleSignature")}</p>
             </div>
           )}
         </div>
 
-        {/* Footer */}
         <div 
           className={`absolute preview-field text-center ${focusedField === 'footer' ? 'active-highlight' : ''}`}
           style={{ 
@@ -194,10 +185,9 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
             whiteSpace: "pre-line"
           }}
         >
-          {data.footer || "Sparkasse Musterstadt • IBAN: DE12 3456 7890 • BIC: WELADED1XXX"}
+          {data.footer || t("footerPlaceholder")}
         </div>
       </div>
     </div>
   );
 }
-

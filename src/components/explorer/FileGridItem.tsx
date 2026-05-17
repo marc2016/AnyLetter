@@ -1,5 +1,7 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card } from 'primereact/card';
+import { formatAppDate } from '../../utils/formatAppDate';
 
 interface FileGridItemProps {
   id: string;
@@ -14,9 +16,10 @@ interface FileGridItemProps {
 }
 
 export function FileGridItem({ id, name, type, updatedAt, onDoubleClick, onContextMenu, subtitle, snippet, itemCount }: FileGridItemProps) {
+  const { t } = useTranslation('explorer');
   const isFolder = type === 'folder';
   const icon = isFolder ? 'pi-folder' : 'pi-file';
-  const dateStr = new Date(updatedAt).toLocaleDateString();
+  const dateStr = formatAppDate(new Date(updatedAt));
 
   const header = (
     <div className="flex align-items-center gap-2 px-3 pt-3 pb-2">
@@ -46,7 +49,9 @@ export function FileGridItem({ id, name, type, updatedAt, onDoubleClick, onConte
         <div className="flex flex-column h-full">
           {isFolder ? (
             <div className="text-600 font-medium text-sm flex-1">
-              {itemCount !== undefined ? `${itemCount} item${itemCount !== 1 ? 's' : ''}` : 'Folder'}
+              {itemCount !== undefined
+                ? t('grid.itemCount', { count: itemCount })
+                : t('grid.folder')}
             </div>
           ) : (
             <div className="flex-1">
@@ -57,7 +62,7 @@ export function FileGridItem({ id, name, type, updatedAt, onDoubleClick, onConte
                 WebkitBoxOrient: 'vertical', 
                 overflow: 'hidden' 
               }}>
-                {snippet || <span className="text-400 font-italic">No content</span>}
+                {snippet || <span className="text-400 font-italic">{t('defaults.noContent')}</span>}
               </div>
             </div>
           )}

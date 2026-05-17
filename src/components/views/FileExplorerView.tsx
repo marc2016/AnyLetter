@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { ContextMenu } from 'primereact/contextmenu';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
@@ -14,6 +15,7 @@ import { useShellNavigation } from '../../context/ShellNavigationContext';
 import { Folder } from '../../models/Folder';
 
 export function FileExplorerView() {
+  const { t } = useTranslation(['explorer', 'common']);
   const { drafts, folders, deleteDraft, addFolder, deleteFolder, updateFolder, updateDraft } = useDrafts();
   const navigate = useNavigate();
   const { explorerFolderId: currentFolderId, setExplorerFolderId: setCurrentFolderId } =
@@ -28,6 +30,8 @@ export function FileExplorerView() {
   const [isMoveDialogVisible, setIsMoveDialogVisible] = useState(false);
   const [newName, setNewName] = useState('');
   const [targetFolderId, setTargetFolderId] = useState<string | null>(null);
+
+  const untitledLabel = t('defaults.untitledLetter');
 
   const currentContent = useMemo(() => {
     let filteredFolders = folders.filter(f => f.parentId === currentFolderId);
@@ -45,12 +49,14 @@ export function FileExplorerView() {
     });
 
     const sortedDrafts = [...filteredDrafts].sort((a, b) => {
-      if (sortKey === 'name') return (a.subject || 'Untitled').localeCompare(b.subject || 'Untitled');
+      if (sortKey === 'name') {
+        return (a.subject || untitledLabel).localeCompare(b.subject || untitledLabel);
+      }
       return b.updatedAt - a.updatedAt;
     });
 
     return { folders: sortedFolders, drafts: sortedDrafts };
-  }, [folders, drafts, currentFolderId, searchQuery, sortKey]);
+  }, [folders, drafts, currentFolderId, searchQuery, sortKey, untitledLabel]);
 
   const handleItemDoubleClick = (id: string, type: 'file' | 'folder') => {
     if (type === 'folder') {
@@ -65,20 +71,20 @@ export function FileExplorerView() {
     cm.current?.show(e);
   };
 
-  const menuItems = [
+  const menuItems = useMemo(() => [
     { 
-      label: 'Rename', 
+      label: t('contextRename'), 
       icon: 'pi pi-pencil', 
       command: () => {
         const item = selectedItem?.type === 'folder' 
           ? folders.find(f => f.id === selectedItem.id)
           : drafts.find(d => d.id === selectedItem?.id);
-        setNewName(selectedItem?.type === 'folder' ? (item as Folder).name : (item as any).subject || 'Untitled');
+        setNewName(selectedItem?.type === 'folder' ? (item as Folder).name : (item as { subject?: string })?.subject || untitledLabel);
         setIsRenameDialogVisible(true);
       }
     },
     {
-      label: 'Move',
+      label: t('contextMove'),
       icon: 'pi pi-external-link',
       command: () => {
         setTargetFolderId(null);
@@ -86,17 +92,18 @@ export function FileExplorerView() {
       }
     },
     { 
-      label: 'Delete', 
+      label: t('contextDelete'), 
       icon: 'pi pi-trash', 
       className: 'text-red-500',
       command: () => confirmDeletion()
     }
-  ];
+  ], [t, selectedItem, folders, drafts, untitledLabel]);
 
   const confirmDeletion = () => {
+    const typeLabel = selectedItem?.type === 'folder' ? t('typeFolder') : t('typeFile');
     confirmDialog({
-      message: `Are you sure you want to delete this ${selectedItem?.type}?`,
-      header: 'Confirmation',
+      message: t('confirmDeleteMessage', { type: typeLabel }),
+      header: t('confirmDeleteHeader'),
       icon: 'pi pi-exclamation-triangle',
       acceptClassName: 'p-button-danger',
       accept: () => {
@@ -105,7 +112,7 @@ export function FileExplorerView() {
         } else if (selectedItem?.id) {
           deleteDraft(selectedItem.id);
         }
-        toast.current?.show({ severity: 'success', summary: 'Deleted', detail: 'Item removed successfully', life: 3000 });
+        toast.current?.show({ severity: 'success', summary: t('toastDeletedSummary'), detail: t('toastDeletedDetail'), life: 3000 });
       }
     });
   };
@@ -118,15 +125,14 @@ export function FileExplorerView() {
       updateDraft(selectedItem.id, { subject: newName });
     }
     setIsRenameDialogVisible(false);
-    toast.current?.show({ severity: 'success', summary: 'Renamed', detail: 'Item updated successfully', life: 3000 });
+    toast.current?.show({ severity: 'success', summary: t('toastRenamedSummary'), detail: t('toastRenamedDetail'), life: 3000 });
   };
 
   const handleMove = () => {
     if (!selectedItem) return;
     
-    // Prevent moving a folder into itself
     if (selectedItem.type === 'folder' && selectedItem.id === targetFolderId) {
-      toast.current?.show({ severity: 'error', summary: 'Error', detail: 'Cannot move a folder into itself', life: 3000 });
+      toast.current?.show({ severity: 'error', summary: t('toastErrorSummary'), detail: t('toastMoveIntoSelf'), life: 3000 });
       return;
     }
 
@@ -137,14 +143,13 @@ export function FileExplorerView() {
     }
     
     setIsMoveDialogVisible(false);
-    toast.current?.show({ severity: 'success', summary: 'Moved', detail: 'Item moved successfully', life: 3000 });
+    toast.current?.show({ severity: 'success', summary: t('toastMovedSummary'), detail: t('toastMovedDetail'), life: 3000 });
   };
 
   const handleNewFolder = () => {
-    const name = 'New Folder';
     const folder: Folder = {
       id: crypto.randomUUID(),
-      name,
+      name: t('defaults.newFolder'),
       parentId: currentFolderId,
       createdAt: Date.now(),
       updatedAt: Date.now()
@@ -173,10 +178,10 @@ export function FileExplorerView() {
       {(currentContent.folders.length === 0 && currentContent.drafts.length === 0) ? (
         <div className="flex flex-column align-items-center justify-content-center p-8 text-500 surface-card border-round shadow-1 mt-4">
           <i className="pi pi-folder-open text-6xl mb-4"></i>
-          <span className="text-xl">This folder is empty</span>
+          <span className="text-xl">{t('emptyFolder')}</span>
           <div className="flex gap-2 mt-4">
-            <Button label="New Folder" icon="pi pi-folder-plus" onClick={handleNewFolder} className="p-button-text" />
-            <Button label="New Letter" icon="pi pi-plus" onClick={handleNewLetter} className="p-button-text" />
+            <Button label={t('newFolder')} icon="pi pi-folder-plus" onClick={handleNewFolder} className="p-button-text" />
+            <Button label={t('newLetter')} icon="pi pi-plus" onClick={handleNewLetter} className="p-button-text" />
           </div>
         </div>
       ) : (
@@ -204,8 +209,8 @@ export function FileExplorerView() {
               <FileGridItem 
                 key={draft.id}
                 id={draft.id}
-                name={draft.subject || 'Untitled Letter'}
-                subtitle={draft.recipient || 'No recipient'}
+                name={draft.subject || untitledLabel}
+                subtitle={draft.recipient || t('defaults.noRecipient')}
                 snippet={snippet}
                 type="file"
                 updatedAt={draft.updatedAt}
@@ -218,19 +223,19 @@ export function FileExplorerView() {
       )}
 
       <Dialog 
-        header="Rename Item" 
+        header={t('renameItem')} 
         visible={isRenameDialogVisible} 
         style={{ width: '350px' }} 
         onHide={() => setIsRenameDialogVisible(false)}
         footer={
           <div>
-            <Button label="Cancel" onClick={() => setIsRenameDialogVisible(false)} className="p-button-text" />
-            <Button label="Rename" onClick={handleRename} autoFocus />
+            <Button label={t('cancel', { ns: 'common' })} onClick={() => setIsRenameDialogVisible(false)} className="p-button-text" />
+            <Button label={t('rename', { ns: 'common' })} onClick={handleRename} autoFocus />
           </div>
         }
       >
         <div className="pt-2">
-          <label htmlFor="rename" className="block mb-2 font-semibold text-sm">New Name</label>
+          <label htmlFor="rename" className="block mb-2 font-semibold text-sm">{t('newName')}</label>
           <InputText 
             id="rename" 
             value={newName} 
@@ -243,28 +248,28 @@ export function FileExplorerView() {
       </Dialog>
 
       <Dialog 
-        header="Move to Folder" 
+        header={t('moveToFolder')} 
         visible={isMoveDialogVisible} 
         style={{ width: '400px' }} 
         onHide={() => setIsMoveDialogVisible(false)}
         footer={
           <div>
-            <Button label="Cancel" onClick={() => setIsMoveDialogVisible(false)} className="p-button-text" />
-            <Button label="Move" onClick={handleMove} />
+            <Button label={t('cancel', { ns: 'common' })} onClick={() => setIsMoveDialogVisible(false)} className="p-button-text" />
+            <Button label={t('move', { ns: 'common' })} onClick={handleMove} />
           </div>
         }
       >
         <div className="pt-2">
-          <label className="block mb-2 font-semibold text-sm">Select Destination</label>
+          <label className="block mb-2 font-semibold text-sm">{t('selectDestination')}</label>
           <div className="flex flex-column gap-2 max-h-15rem overflow-y-auto border-1 surface-border border-round p-2">
             <div 
               className={`p-2 cursor-pointer border-round hover:surface-hover ${targetFolderId === null ? 'surface-200' : ''}`}
               onClick={() => setTargetFolderId(null)}
             >
-              <i className="pi pi-home mr-2 text-primary"></i> Home (Root)
+              <i className="pi pi-home mr-2 text-primary"></i> {t('homeRoot')}
             </div>
             {folders
-              .filter(f => f.id !== selectedItem?.id) // Filter out current folder if moving folder
+              .filter(f => f.id !== selectedItem?.id)
               .map(f => (
               <div 
                 key={f.id}

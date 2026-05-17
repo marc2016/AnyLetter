@@ -1,0 +1,15 @@
+{
+  "foldMark1": "Fold mark 1",
+  "punchMark": "Punch mark",
+  "foldMark2": "Fold mark 2",
+  "senderPlaceholder": "Sender line (remarks zone)",
+  "notesPlaceholder": "Remarks zone (e.g. registered mail)",
+  "recipientPlaceholder": "Recipient address\nRecipient name\nStreet and number\nPostal code and city",
+  "infoPlaceholder": "Your reference:\nOur reference:\nPhone:\nEmail:",
+  "subjectPlaceholder": "Subject line",
+  "footerPlaceholder": "Sample Bank • IBAN: DE12 3456 7890 • BIC: WELADED1XXX",
+  "sampleGreeting": "Dear Sir or Madam,",
+  "sampleBody": "Your letter text appears here. Content from the editor is projected onto the DIN A4 page with formatting preserved.",
+  "sampleClosing": "Yours sincerely,",
+  "sampleSignature": "Your name"
+}

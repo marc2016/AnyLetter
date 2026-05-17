@@ -1,0 +1,11 @@
+{
+  "title": "Brief bearbeiten",
+  "recipient": "Empfänger",
+  "sender": "Absender",
+  "notes": "Notizen",
+  "info": "Infobereich",
+  "date": "Datum",
+  "subject": "Betreff",
+  "content": "Inhalt",
+  "footer": "Fußzeile"
+}

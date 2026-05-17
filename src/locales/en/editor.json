@@ -1,0 +1,11 @@
+{
+  "title": "Edit letter",
+  "recipient": "Recipient",
+  "sender": "Sender",
+  "notes": "Notes",
+  "info": "Info block",
+  "date": "Date",
+  "subject": "Subject",
+  "content": "Content",
+  "footer": "Footer"
+}

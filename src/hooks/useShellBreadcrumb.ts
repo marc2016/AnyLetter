@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { MenuItem } from "primereact/menuitem";
 import { useDrafts } from "../context/DraftContext";
@@ -6,6 +7,7 @@ import { useShellNavigation } from "../context/ShellNavigationContext";
 import { buildFolderBreadcrumbItems } from "./useFolderBreadcrumbItems";
 
 export function useShellBreadcrumb(): { home: MenuItem; items: MenuItem[] } {
+  const { t, i18n } = useTranslation("breadcrumb");
   const location = useLocation();
   const navigate = useNavigate();
   const { id: draftId } = useParams<{ id: string }>();
@@ -35,15 +37,15 @@ export function useShellBreadcrumb(): { home: MenuItem; items: MenuItem[] } {
         ...buildFolderBreadcrumbItems(folders, explorerFolderId, setExplorerFolderId),
       );
     } else if (viewKind === "editor-new") {
-      items.push({ label: "Neuer Brief" });
+      items.push({ label: t("newLetter") });
     } else if (viewKind === "editor-draft") {
       const draft = drafts.find((d) => d.id === draftId);
       items.push({
-        label: "Briefe",
+        label: t("letters"),
         command: () => navigate("/letters"),
       });
       items.push({
-        label: draft?.subject?.trim() || "Untitled",
+        label: draft?.subject?.trim() || t("untitled"),
       });
     }
 
@@ -58,5 +60,7 @@ export function useShellBreadcrumb(): { home: MenuItem; items: MenuItem[] } {
     setExplorerFolderId,
     goToExplorerRoot,
     navigate,
+    t,
+    i18n.language,
   ]);
 }

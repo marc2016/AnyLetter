@@ -1,0 +1,40 @@
+{
+  "searchPlaceholder": "Suchen…",
+  "sortBy": "Sortieren",
+  "sortDate": "Datum",
+  "sortName": "Name",
+  "newFolder": "Neuer Ordner",
+  "newLetter": "Neuer Brief",
+  "emptyFolder": "Dieser Ordner ist leer",
+  "renameItem": "Element umbenennen",
+  "newName": "Neuer Name",
+  "moveToFolder": "In Ordner verschieben",
+  "selectDestination": "Ziel auswählen",
+  "homeRoot": "Start (Root)",
+  "contextRename": "Umbenennen",
+  "contextMove": "Verschieben",
+  "contextDelete": "Löschen",
+  "confirmDeleteHeader": "Bestätigung",
+  "confirmDeleteMessage": "Möchten Sie dieses {{type}} wirklich löschen?",
+  "typeFolder": "Ordner",
+  "typeFile": "Dokument",
+  "toastDeletedSummary": "Gelöscht",
+  "toastDeletedDetail": "Element wurde entfernt",
+  "toastRenamedSummary": "Umbenannt",
+  "toastRenamedDetail": "Element wurde aktualisiert",
+  "toastMovedSummary": "Verschoben",
+  "toastMovedDetail": "Element wurde verschoben",
+  "toastErrorSummary": "Fehler",
+  "toastMoveIntoSelf": "Ein Ordner kann nicht in sich selbst verschoben werden",
+  "defaults": {
+    "untitledLetter": "Unbenannter Brief",
+    "noRecipient": "Kein Empfänger",
+    "newFolder": "Neuer Ordner",
+    "noContent": "Kein Inhalt"
+  },
+  "grid": {
+    "folder": "Ordner",
+    "itemCount_one": "{{count}} Element",
+    "itemCount_other": "{{count}} Elemente"
+  }
+}

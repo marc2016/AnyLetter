@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Splitter, SplitterPanel } from "primereact/splitter";
 import { ProgressSpinner } from "primereact/progressspinner";
@@ -15,6 +16,7 @@ import {
 export type { LetterData } from "../../../models/letterData";
 
 export function LetterEditor() {
+  const { t } = useTranslation("common");
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
   const navigate = useNavigate();
@@ -59,7 +61,7 @@ export function LetterEditor() {
   if (location.pathname === "/new" || isLoading || !letterData) {
     return (
       <div className="h-full w-full flex align-items-center justify-content-center surface-ground">
-        <ProgressSpinner aria-label="Loading" />
+        <ProgressSpinner aria-label={t("loading")} />
       </div>
     );
   }

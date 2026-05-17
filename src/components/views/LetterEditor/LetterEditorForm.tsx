@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputTextarea } from "primereact/inputtextarea";
 import { InputText } from "primereact/inputtext";
@@ -16,12 +17,13 @@ export function LetterEditorForm({
   onUpdate,
   onFocusField,
 }: LetterEditorFormProps) {
+  const { t, i18n } = useTranslation("editor");
+
   return (
     <div className="flex flex-column h-full w-full overflow-y-auto pr-3">
-      <h2 className="mt-0 mb-5 text-900">Brief bearbeiten</h2>
+      <h2 className="mt-0 mb-5 text-900">{t("title")}</h2>
       
       <div className="grid formgrid">
-        {/* Row 1: Recipient and Sender */}
         <div className="col-12 md:col-6 mb-4">
           <FloatLabel>
             <InputTextarea 
@@ -33,7 +35,7 @@ export function LetterEditorForm({
               onFocus={() => onFocusField("recipient")}
               onBlur={() => onFocusField(null)}
             />
-            <label htmlFor="recipient">Empfänger</label>
+            <label htmlFor="recipient">{t("recipient")}</label>
           </FloatLabel>
         </div>
         <div className="col-12 md:col-6 mb-4">
@@ -47,11 +49,10 @@ export function LetterEditorForm({
               onFocus={() => onFocusField("sender")}
               onBlur={() => onFocusField(null)}
             />
-            <label htmlFor="sender">Absender</label>
+            <label htmlFor="sender">{t("sender")}</label>
           </FloatLabel>
         </div>
 
-        {/* Row 2: Notes and Info Block */}
         <div className="col-12 md:col-6 mb-4">
           <FloatLabel>
             <InputTextarea 
@@ -63,7 +64,7 @@ export function LetterEditorForm({
               onFocus={() => onFocusField("notes")}
               onBlur={() => onFocusField(null)}
             />
-            <label htmlFor="notes">Notizen</label>
+            <label htmlFor="notes">{t("notes")}</label>
           </FloatLabel>
         </div>
         <div className="col-12 md:col-6 mb-4">
@@ -77,28 +78,26 @@ export function LetterEditorForm({
               onFocus={() => onFocusField("info")}
               onBlur={() => onFocusField(null)}
             />
-            <label htmlFor="info">Infobereich</label>
+            <label htmlFor="info">{t("info")}</label>
           </FloatLabel>
         </div>
 
-        {/* Row 3: Date */}
         <div className="col-12 md:col-6 mb-4">
           <FloatLabel>
             <Calendar 
               id="date" 
               className="w-full" 
-              dateFormat="dd.mm.yy" 
+              dateFormat={i18n.language.startsWith("de") ? "dd.mm.yy" : "mm/dd/yy"}
               showIcon 
               value={data.date}
               onChange={(e) => onUpdate("date", e.value)}
               onFocus={() => onFocusField("date")}
               onBlur={() => onFocusField(null)}
             />
-            <label htmlFor="date">Datum</label>
+            <label htmlFor="date">{t("date")}</label>
           </FloatLabel>
         </div>
         
-        {/* Row 4: Subject */}
         <div className="col-12 mb-4">
           <FloatLabel>
             <InputText 
@@ -109,13 +108,12 @@ export function LetterEditorForm({
               onFocus={() => onFocusField("subject")}
               onBlur={() => onFocusField(null)}
             />
-            <label htmlFor="subject">Betreff</label>
+            <label htmlFor="subject">{t("subject")}</label>
           </FloatLabel>
         </div>
 
-        {/* Row 5: Content */}
         <div className="col-12 mb-4">
-            <label className="text-sm text-600 block mb-2 font-medium">Inhalt</label>
+            <label className="text-sm text-600 block mb-2 font-medium">{t("content")}</label>
             <Editor 
               style={{ height: '320px' }} 
               value={data.content}
@@ -125,7 +123,6 @@ export function LetterEditorForm({
             />
         </div>
 
-        {/* Row 6: Footer */}
         <div className="col-12 mb-4">
           <FloatLabel>
             <InputTextarea 
@@ -137,11 +134,10 @@ export function LetterEditorForm({
               onFocus={() => onFocusField("footer")}
               onBlur={() => onFocusField(null)}
             />
-            <label htmlFor="footer">Fußzeile</label>
+            <label htmlFor="footer">{t("footer")}</label>
           </FloatLabel>
         </div>
       </div>
     </div>
   );
 }
-

@@ -1,0 +1,40 @@
+{
+  "searchPlaceholder": "Search…",
+  "sortBy": "Sort by",
+  "sortDate": "Date",
+  "sortName": "Name",
+  "newFolder": "New folder",
+  "newLetter": "New letter",
+  "emptyFolder": "This folder is empty",
+  "renameItem": "Rename item",
+  "newName": "New name",
+  "moveToFolder": "Move to folder",
+  "selectDestination": "Select destination",
+  "homeRoot": "Home (root)",
+  "contextRename": "Rename",
+  "contextMove": "Move",
+  "contextDelete": "Delete",
+  "confirmDeleteHeader": "Confirmation",
+  "confirmDeleteMessage": "Are you sure you want to delete this {{type}}?",
+  "typeFolder": "folder",
+  "typeFile": "file",
+  "toastDeletedSummary": "Deleted",
+  "toastDeletedDetail": "Item removed successfully",
+  "toastRenamedSummary": "Renamed",
+  "toastRenamedDetail": "Item updated successfully",
+  "toastMovedSummary": "Moved",
+  "toastMovedDetail": "Item moved successfully",
+  "toastErrorSummary": "Error",
+  "toastMoveIntoSelf": "Cannot move a folder into itself",
+  "defaults": {
+    "untitledLetter": "Untitled letter",
+    "noRecipient": "No recipient",
+    "newFolder": "New folder",
+    "noContent": "No content"
+  },
+  "grid": {
+    "folder": "Folder",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items"
+  }
+}

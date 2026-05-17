@@ -1,0 +1,15 @@
+{
+  "foldMark1": "Falzmarke 1",
+  "punchMark": "Lochmarke",
+  "foldMark2": "Falzmarke 2",
+  "senderPlaceholder": "Absenderzeile (Zusatz- und Vermerkzone)",
+  "notesPlaceholder": "Zusatz- und Vermerkzone (z.B. Einschreiben)",
+  "recipientPlaceholder": "Empfängeradresse\nName des Empfängers\nStraße und Hausnummer\nPLZ und Ort",
+  "infoPlaceholder": "Ihr Zeichen:\nUnser Zeichen:\nTelefon:\nE-Mail:",
+  "subjectPlaceholder": "Betreffzeile",
+  "footerPlaceholder": "Sparkasse Musterstadt • IBAN: DE12 3456 7890 • BIC: WELADED1XXX",
+  "sampleGreeting": "Sehr geehrte Damen und Herren,",
+  "sampleBody": "hier steht Ihr Brieftext. Der Text wird mit allen Formatierungen aus dem Editor live auf das DIN A4 Blatt projiziert.",
+  "sampleClosing": "Mit freundlichen Grüßen,",
+  "sampleSignature": "Ihr Name"
+}
