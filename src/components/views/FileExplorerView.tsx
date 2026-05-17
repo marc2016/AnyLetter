@@ -9,17 +9,17 @@ import { confirmDialog } from 'primereact/confirmdialog';
 import { useDrafts } from '../../context/DraftContext';
 import { FileGrid } from '../explorer/FileGrid';
 import { FileGridItem } from '../explorer/FileGridItem';
-import { ExplorerBreadcrumbs } from '../explorer/ExplorerBreadcrumbs';
 import { ExplorerActionBar } from '../explorer/ExplorerActionBar';
+import { useShellNavigation } from '../../context/ShellNavigationContext';
 import { Folder } from '../../models/Folder';
 
 export function FileExplorerView() {
-  const { drafts, folders, addDraft, deleteDraft, addFolder, deleteFolder, updateFolder, updateDraft } = useDrafts();
+  const { drafts, folders, deleteDraft, addFolder, deleteFolder, updateFolder, updateDraft } = useDrafts();
   const navigate = useNavigate();
+  const { explorerFolderId: currentFolderId, setExplorerFolderId: setCurrentFolderId } =
+    useShellNavigation();
   const toast = useRef<Toast>(null);
   const cm = useRef<ContextMenu>(null);
-
-  const [currentFolderId, setCurrentFolderId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortKey, setSortKey] = useState('updatedAt');
   
@@ -168,12 +168,6 @@ export function FileExplorerView() {
         onSortChange={setSortKey}
         onNewFolder={handleNewFolder}
         onNewLetter={handleNewLetter}
-      />
-
-      <ExplorerBreadcrumbs 
-        currentFolderId={currentFolderId}
-        folders={folders}
-        onNavigate={setCurrentFolderId}
       />
 
       {(currentContent.folders.length === 0 && currentContent.drafts.length === 0) ? (

@@ -8,3 +8,22 @@ html, body, #root {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.app-shell-menubar {
+  border-radius: 0;
+}
+
+.app-shell-menubar .p-menubar-start {
+  flex: 1;
+  min-width: 0;
+}
+
+.app-shell-breadcrumb .p-breadcrumb {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.app-shell-breadcrumb .p-menuitem-link {
+  padding: 0.25rem 0.5rem;
+}

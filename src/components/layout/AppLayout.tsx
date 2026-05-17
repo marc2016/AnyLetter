@@ -1,33 +1,49 @@
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
-import { Button } from "primereact/button";
+import { Outlet } from "react-router-dom";
+import { Menubar } from "primereact/menubar";
+import { BreadCrumb } from "primereact/breadcrumb";
+import { useShellNavigation } from "../../context/ShellNavigationContext";
+import { useShellBreadcrumb } from "../../hooks/useShellBreadcrumb";
 
 export function AppLayout() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const isMainView = location.pathname === "/letters" || location.pathname === "/";
+  const { goToExplorerRoot } = useShellNavigation();
+  const { home, items } = useShellBreadcrumb();
+
+  const start = (
+    <div className="flex align-items-center gap-3 flex-1 min-w-0">
+      <div
+        className="flex align-items-center gap-2 cursor-pointer shrink-0"
+        onClick={goToExplorerRoot}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            goToExplorerRoot();
+          }
+        }}
+      >
+        <i className="pi pi-envelope text-2xl text-primary" aria-hidden />
+        <span className="text-xl font-semibold text-color hover:text-primary transition-colors">
+          AnyLetter
+        </span>
+      </div>
+      <BreadCrumb
+        home={home}
+        model={items}
+        className="app-shell-breadcrumb border-none bg-transparent p-0 flex-1 min-w-0"
+      />
+    </div>
+  );
 
   return (
     <div className="flex flex-column h-screen w-screen m-0 p-0 overflow-hidden surface-ground">
-      <header className="flex align-items-center px-4 py-2 surface-overlay border-bottom-1 border-300 gap-3">
-        {!isMainView && (
-          <Button 
-            icon="pi pi-arrow-left" 
-            className="p-button-text p-button-secondary p-button-sm" 
-            onClick={() => navigate("/letters")}
-            label="Zurück"
-          />
-        )}
-        <h1 
-          className="text-xl font-semibold m-0 text-color cursor-pointer hover:text-primary transition-colors"
-          onClick={() => navigate("/letters")}
-        >
-          AnyLetter
-        </h1>
-      </header>
+      <Menubar
+        model={[]}
+        start={start}
+        className="app-shell-menubar border-noround border-bottom-1 surface-border px-3 py-2"
+      />
       <main className="flex-1 overflow-auto">
         <Outlet />
       </main>
     </div>
   );
 }
-
