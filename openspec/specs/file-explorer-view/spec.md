@@ -11,11 +11,19 @@ The system SHALL display a grid view of folders and letter drafts on the applica
 - **THEN** the startup view shows a grid of files and folders rendered as interactive cards located at the root level
 
 ### Requirement: Breadcrumb Navigation
-The system SHALL provide a breadcrumb navigation bar to allow users to navigate through folder hierarchies.
+The system SHALL provide breadcrumb navigation for folder hierarchies in the global application Menubar (not as a separate control inside the explorer content area), allowing users to navigate through folder paths and return to the explorer root.
 
 #### Scenario: User navigates into a folder
 - **WHEN** the user double-clicks a folder in the grid
-- **THEN** the grid updates to show the folder's contents and the breadcrumb updates to reflect the new path
+- **THEN** the grid updates to show the folder's contents and the Menubar breadcrumb updates to reflect the new path
+
+#### Scenario: User navigates via breadcrumb segment
+- **WHEN** the user clicks a folder segment in the Menubar breadcrumb
+- **THEN** the explorer grid updates to show that folder's contents
+
+#### Scenario: User returns to explorer root via breadcrumb home
+- **WHEN** the user clicks the home segment in the Menubar breadcrumb while in a subfolder
+- **THEN** the explorer shows root-level folders and files and the breadcrumb reflects the root
 
 ### Requirement: Item Context Menu
 The system SHALL provide a context menu for items (folders and files) when right-clicked, offering rename, move, and delete actions.
@@ -44,4 +52,3 @@ The system SHALL display a confirmation dialog before deleting any item (file or
 #### Scenario: User attempts to delete an item
 - **WHEN** the user selects the "Delete" action from the context menu
 - **THEN** a confirmation dialog appears asking if the user is sure, and the deletion only proceeds if confirmed
-
