@@ -68,3 +68,18 @@ The system SHALL apply PrimeReact locale settings consistent with the active app
 #### Scenario: Calendar in German
 - **WHEN** the active language is German and the user opens the date picker
 - **THEN** month and day labels appear in German
+
+### Requirement: Localized letter preview date label and page numbering
+The system SHALL provide localized strings for the letter preview and PDF date label prefix and page numbering format in the `preview` translation namespace.
+
+#### Scenario: German date label string
+- **WHEN** the active language is German
+- **THEN** the preview date label resolves to `Datum: `
+
+#### Scenario: English page numbering string
+- **WHEN** the active language is English and page 2 of 3 is displayed
+- **THEN** the page line resolves to `Page 2 of 3`
+
+#### Scenario: German page numbering string
+- **WHEN** the active language is German and page 1 of 1 is displayed
+- **THEN** the page line resolves to `Seite 1 von 1`
