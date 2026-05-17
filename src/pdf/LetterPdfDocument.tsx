@@ -18,7 +18,6 @@ const styles = StyleSheet.create({
   notes: {
     fontSize: DIN_LAYOUT.notes.fontSize,
     fontStyle: "italic",
-    color: PDF_COLORS.muted,
   },
   recipient: {
     fontSize: DIN_LAYOUT.recipient.fontSize,
@@ -26,12 +25,10 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: DIN_LAYOUT.date.fontSize,
-    textAlign: "right",
   },
   info: {
     fontSize: DIN_LAYOUT.info.fontSize,
     lineHeight: DIN_LAYOUT.info.lineHeight,
-    color: PDF_COLORS.muted,
   },
   subject: {
     fontSize: DIN_LAYOUT.subject.fontSize,
@@ -41,9 +38,12 @@ const styles = StyleSheet.create({
     fontSize: DIN_LAYOUT.content.fontSize,
     lineHeight: DIN_LAYOUT.content.lineHeight,
   },
+  pageNumber: {
+    fontSize: DIN_LAYOUT.pageNumber.fontSize,
+    textAlign: "right",
+  },
   footer: {
     fontSize: DIN_LAYOUT.footer.fontSize,
-    color: PDF_COLORS.muted,
     textAlign: "center",
     borderTopWidth: 0.5,
     borderTopColor: PDF_COLORS.rule,
@@ -83,12 +83,16 @@ function formatSender(sender: string): string {
 export interface LetterPdfDocumentProps {
   data: LetterData;
   displayDate: string;
+  dateLabel: string;
+  formatPageOf: (page: number, total: number) => string;
   contentParagraphs: string[];
 }
 
 export function LetterPdfDocument({
   data,
   displayDate,
+  dateLabel,
+  formatPageOf,
   contentParagraphs,
 }: LetterPdfDocumentProps) {
   const contentNode = quillParagraphsToPdf(contentParagraphs, styles.content);
@@ -143,7 +147,10 @@ export function LetterPdfDocument({
           </Text>
         ) : null}
 
-        <Text style={{ ...absBox(DIN_LAYOUT.date), ...styles.date }}>{displayDate}</Text>
+        <Text style={{ ...absBox(DIN_LAYOUT.date), ...styles.date }}>
+          {dateLabel}
+          {displayDate}
+        </Text>
 
         {data.info.trim() ? (
           <Text style={{ ...absBox(DIN_LAYOUT.info), ...styles.info }}>{data.info}</Text>
@@ -156,6 +163,14 @@ export function LetterPdfDocument({
         {contentNode ? (
           <View style={{ ...absBox(DIN_LAYOUT.content), ...styles.content }}>{contentNode}</View>
         ) : null}
+
+        <Text
+          fixed
+          style={{ ...absBox(DIN_LAYOUT.pageNumber), ...styles.pageNumber }}
+          render={({ pageNumber, totalPages }) =>
+            formatPageOf(pageNumber, totalPages)
+          }
+        />
 
         {data.footer.trim() ? (
           <Text style={{ ...absBox(DIN_LAYOUT.footer), ...styles.footer }}>{data.footer}</Text>

@@ -12,6 +12,8 @@
   "sampleBody": "Your letter text appears here. Content from the editor is projected onto the DIN A4 page with formatting preserved.",
   "sampleClosing": "Yours sincerely,",
   "sampleSignature": "Your name",
+  "dateLabel": "Date: ",
+  "pageOf": "Page {{page}} of {{total}}",
   "exportPdf": "Save as PDF",
   "exportPdfErrorSummary": "Export failed",
   "exportPdfErrorDetail": "The PDF could not be created or saved."

@@ -5,7 +5,13 @@ import { Toast } from "primereact/toast";
 import { LetterData } from "../../../models/letterData";
 import { formatAppDate } from "../../../utils/formatAppDate";
 import { exportLetterPdf } from "../../../utils/exportLetterPdf";
-import { FOLD_MARKS_MM, mmToTopPercent } from "../../../pdf/dinLayout";
+import {
+  DIN_LAYOUT,
+  FOLD_MARKS_MM,
+  layoutFontSizeToCqw,
+  layoutToPreviewPercent,
+  mmToTopPercent,
+} from "../../../pdf/dinLayout";
 
 interface LetterPreviewProps {
   data: LetterData;
@@ -71,17 +77,21 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
         .preview-rich-content p {
           margin: 0 0 0.5rem 0;
         }
+        .preview-rich-content,
+        .preview-rich-content * {
+          color: #000000;
+        }
       `}</style>
 
         <div
-          className="bg-white shadow-4 relative text-color-secondary overflow-hidden select-none"
+          className="bg-white shadow-4 relative overflow-hidden select-none"
           style={{
             width: "210mm",
             height: "297mm",
             minWidth: "210mm",
             minHeight: "297mm",
             containerType: "inline-size",
-            color: "#2c3e50",
+            color: "#000000",
           }}
         >
           <div
@@ -140,7 +150,6 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
               width: "40%",
               fontSize: "1.3cqw",
               fontStyle: "italic",
-              color: "#7f8c8d",
             }}
           >
             {data.notes || t("notesPlaceholder")}
@@ -161,27 +170,23 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
           </div>
 
           <div
-            className={`absolute preview-field text-right ${previewHighlight("date", focusedField)}`}
+            className={`absolute preview-field ${previewHighlight("date", focusedField)}`}
             style={{
-              top: "10.1%",
-              left: "60.0%",
-              width: "30.5%",
-              fontSize: "1.5cqw",
+              ...layoutToPreviewPercent(DIN_LAYOUT.date),
+              fontSize: layoutFontSizeToCqw(DIN_LAYOUT.date.fontSize),
             }}
           >
+            {t("dateLabel")}
             {displayDate}
           </div>
 
           <div
             className={`absolute preview-field ${previewHighlight("info", focusedField)}`}
             style={{
-              top: "14.5%",
-              left: "60.0%",
-              width: "30.5%",
-              fontSize: "1.3cqw",
+              ...layoutToPreviewPercent(DIN_LAYOUT.info),
+              fontSize: layoutFontSizeToCqw(DIN_LAYOUT.info.fontSize),
               lineHeight: "1.4",
               whiteSpace: "pre-line",
-              color: "#7f8c8d",
             }}
           >
             {data.info || t("infoPlaceholder")}
@@ -194,7 +199,6 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
               left: "12.0%",
               width: "76.0%",
               fontSize: "2.0cqw",
-              color: "#2c3e50",
             }}
           >
             {data.subject || t("subjectPlaceholder")}
@@ -210,13 +214,12 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
               fontSize: "1.6cqw",
               lineHeight: "1.6",
               overflow: "hidden",
-              color: "#2c3e50",
             }}
           >
             {data.content ? (
               <div dangerouslySetInnerHTML={{ __html: data.content }} />
             ) : (
-              <div style={{ color: "#bdc3c7" }}>
+              <div>
                 <p>{t("sampleGreeting")}</p>
                 <p>{t("sampleBody")}</p>
                 <p>{t("sampleClosing")}</p>
@@ -226,15 +229,23 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
           </div>
 
           <div
+            className="absolute preview-field"
+            style={{
+              ...layoutToPreviewPercent(DIN_LAYOUT.pageNumber),
+              fontSize: layoutFontSizeToCqw(DIN_LAYOUT.pageNumber.fontSize),
+              textAlign: "right",
+            }}
+          >
+            {t("pageOf", { page: 1, total: 1 })}
+          </div>
+
+          <div
             className={`absolute preview-field text-center ${previewHighlight("footer", focusedField)}`}
             style={{
-              bottom: "4%",
-              left: "12.0%",
-              width: "76.0%",
-              fontSize: "1.2cqw",
+              ...layoutToPreviewPercent(DIN_LAYOUT.footer),
+              fontSize: layoutFontSizeToCqw(DIN_LAYOUT.footer.fontSize),
               borderTop: "0.5px solid #dcdde1",
               paddingTop: "6px",
-              color: "#7f8c8d",
               whiteSpace: "pre-line",
             }}
           >

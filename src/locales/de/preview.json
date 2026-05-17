@@ -12,6 +12,8 @@
   "sampleBody": "hier steht Ihr Brieftext. Der Text wird mit allen Formatierungen aus dem Editor live auf das DIN A4 Blatt projiziert.",
   "sampleClosing": "Mit freundlichen Grüßen,",
   "sampleSignature": "Ihr Name",
+  "dateLabel": "Datum: ",
+  "pageOf": "Seite {{page}} von {{total}}",
   "exportPdf": "Als PDF speichern",
   "exportPdfErrorSummary": "Export fehlgeschlagen",
   "exportPdfErrorDetail": "Die PDF-Datei konnte nicht erstellt oder gespeichert werden."

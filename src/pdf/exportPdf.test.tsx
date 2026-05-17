@@ -22,6 +22,8 @@ describe("LetterPdfDocument", () => {
         <LetterPdfDocument
           data={data}
           displayDate="17.5.2026"
+          dateLabel="Datum: "
+          formatPageOf={(page, total) => `Seite ${page} von ${total}`}
           contentParagraphs={parseQuillHtmlToParagraphs(data.content)}
         />,
       ).toBlob();

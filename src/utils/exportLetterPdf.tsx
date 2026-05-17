@@ -1,6 +1,7 @@
 import { pdf } from "@react-pdf/renderer";
 import { save } from "@tauri-apps/plugin-dialog";
 import { writeFile } from "@tauri-apps/plugin-fs";
+import i18n from "../i18n";
 import { LetterData } from "../models/letterData";
 import { LetterPdfDocument } from "../pdf/LetterPdfDocument";
 import { parseQuillHtmlToParagraphs } from "../pdf/quillHtmlToPdf";
@@ -48,11 +49,16 @@ export async function exportLetterPdf(
     ? parseQuillHtmlToParagraphs(data.content)
     : [];
 
+  const lang = language ?? i18n.language;
+  const t = i18n.getFixedT(lang, "preview");
+
   const pdfBlob = await withTimeout(
     pdf(
       <LetterPdfDocument
         data={data}
         displayDate={displayDate}
+        dateLabel={t("dateLabel")}
+        formatPageOf={(page, total) => t("pageOf", { page, total })}
         contentParagraphs={contentParagraphs}
       />,
     ).toBlob(),
