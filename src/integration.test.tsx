@@ -18,6 +18,10 @@ vi.mock('@tauri-apps/api/window', () => ({
   getCurrentWindow: vi.fn().mockReturnValue({
     onCloseRequested: vi.fn().mockResolvedValue(() => {}),
     destroy: vi.fn(),
+    minimize: vi.fn(),
+    toggleMaximize: vi.fn(),
+    close: vi.fn(),
+    startDragging: vi.fn(),
   }),
 }));
 

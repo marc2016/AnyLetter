@@ -1,0 +1,19 @@
+{
+  "app": {
+    "windows": [
+      {
+        "title": "AnyLetter",
+        "width": 800,
+        "height": 600,
+        "decorations": true,
+        "hiddenTitle": true,
+        "titleBarStyle": "Overlay",
+        "dragDropEnabled": false,
+        "trafficLightPosition": {
+          "x": 12,
+          "y": 18
+        }
+      }
+    ]
+  }
+}

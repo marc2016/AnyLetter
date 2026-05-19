@@ -7,5 +7,9 @@
   "delete": "Löschen",
   "language": "Sprache",
   "languageDe": "Deutsch",
-  "languageEn": "English"
+  "languageEn": "English",
+  "windowControls": "Fenstersteuerung",
+  "windowMinimize": "Fenster minimieren",
+  "windowMaximize": "Fenster maximieren",
+  "windowClose": "Fenster schließen"
 }
