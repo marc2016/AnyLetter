@@ -5,6 +5,7 @@ import { Toast } from "primereact/toast";
 import { LetterData } from "../../../models/letterData";
 import { formatAppDate } from "../../../utils/formatAppDate";
 import { exportLetterPdf } from "../../../utils/exportLetterPdf";
+import woodBackground from "../../../assets/background_letter_wood.png";
 import {
   DIN_LAYOUT,
   FOLD_MARKS_MM,
@@ -12,6 +13,8 @@ import {
   layoutToPreviewPercent,
   mmToTopPercent,
 } from "../../../pdf/dinLayout";
+
+const PREVIEW_PAGE_SCALE = 0.88;
 
 interface LetterPreviewProps {
   data: LetterData;
@@ -56,7 +59,15 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
   return (
     <div className="relative w-full h-full">
       <Toast ref={toastRef} />
-      <div className="w-full h-full overflow-auto flex align-items-start justify-content-center p-4">
+      <div
+        className="w-full h-full overflow-auto flex align-items-start justify-content-center p-4"
+        style={{
+          backgroundImage: `url(${woodBackground})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
         <style>{`
         .preview-field {
           transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -84,16 +95,27 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
       `}</style>
 
         <div
-          className="bg-white shadow-4 relative overflow-hidden select-none"
           style={{
-            width: "210mm",
-            height: "297mm",
-            minWidth: "210mm",
-            minHeight: "297mm",
-            containerType: "inline-size",
-            color: "#000000",
+            width: `calc(210mm * ${PREVIEW_PAGE_SCALE})`,
+            height: `calc(297mm * ${PREVIEW_PAGE_SCALE})`,
+            minWidth: `calc(210mm * ${PREVIEW_PAGE_SCALE})`,
+            minHeight: `calc(297mm * ${PREVIEW_PAGE_SCALE})`,
+            flexShrink: 0,
           }}
         >
+          <div
+            className="bg-white shadow-4 relative overflow-hidden select-none"
+            style={{
+              width: "210mm",
+              height: "297mm",
+              minWidth: "210mm",
+              minHeight: "297mm",
+              transform: `scale(${PREVIEW_PAGE_SCALE})`,
+              transformOrigin: "top left",
+              containerType: "inline-size",
+              color: "#000000",
+            }}
+          >
           <div
             className="absolute left-0"
             style={{
@@ -250,6 +272,7 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
             }}
           >
             {data.footer || t("footerPlaceholder")}
+          </div>
           </div>
         </div>
       </div>
