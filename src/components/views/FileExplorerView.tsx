@@ -13,6 +13,7 @@ import { FileGridItem } from '../explorer/FileGridItem';
 import { ExplorerActionBar } from '../explorer/ExplorerActionBar';
 import { useShellNavigation } from '../../context/ShellNavigationContext';
 import { Folder } from '../../models/Folder';
+import { htmlToPlainText } from '../../utils/htmlToPlainText';
 
 export function FileExplorerView() {
   const { t } = useTranslation(['explorer', 'common']);
@@ -58,7 +59,7 @@ export function FileExplorerView() {
     return { folders: sortedFolders, drafts: sortedDrafts };
   }, [folders, drafts, currentFolderId, searchQuery, sortKey, untitledLabel]);
 
-  const handleItemDoubleClick = (id: string, type: 'file' | 'folder') => {
+  const handleItemClick = (id: string, type: 'file' | 'folder') => {
     if (type === 'folder') {
       setCurrentFolderId(id);
     } else {
@@ -196,15 +197,15 @@ export function FileExplorerView() {
                 type="folder"
                 updatedAt={folder.updatedAt}
                 itemCount={itemCount}
-                onDoubleClick={handleItemDoubleClick}
+                onClick={handleItemClick}
                 onContextMenu={handleContextMenu}
               />
             );
           })}
           {currentContent.drafts.map(draft => {
-            const text = (draft.content || draft.body || '').trim();
-            let snippet = text.substring(0, 100);
-            if (text.length > 100) snippet += '...';
+            const plain = htmlToPlainText(draft.content || draft.body || '');
+            let snippet = plain.substring(0, 100);
+            if (plain.length > 100) snippet += '...';
             return (
               <FileGridItem 
                 key={draft.id}
@@ -214,7 +215,7 @@ export function FileExplorerView() {
                 snippet={snippet}
                 type="file"
                 updatedAt={draft.updatedAt}
-                onDoubleClick={handleItemDoubleClick}
+                onClick={handleItemClick}
                 onContextMenu={handleContextMenu}
               />
             );
