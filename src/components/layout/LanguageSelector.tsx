@@ -29,7 +29,7 @@ function languageOptionTemplate(option: (typeof LANGUAGE_OPTIONS)[number]) {
   );
 }
 
-export function LanguageSelector() {
+export function LanguageSelector({ className }: { className?: string }) {
   const { i18n: i18nInstance } = useTranslation();
   const value = resolveLanguage(i18nInstance.language);
   const selected =
@@ -50,7 +50,7 @@ export function LanguageSelector() {
       onChange={handleChange}
       itemTemplate={languageOptionTemplate}
       valueTemplate={() => languageOptionTemplate(selected)}
-      className="app-language-selector"
+      className={["app-language-selector", className].filter(Boolean).join(" ")}
     />
   );
 }

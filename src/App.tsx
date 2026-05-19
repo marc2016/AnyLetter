@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AppLayout } from "./components/layout/AppLayout";
 import { FileExplorerView } from "./components/views/FileExplorerView";
 import { LetterEditor } from "./components/views/LetterEditor/LetterEditor";
+import { SettingsView } from "./components/views/SettingsView";
 import { DraftProvider } from "./context/DraftContext";
 import { ShellNavigationProvider } from "./context/ShellNavigationContext";
 import { ConfirmDialog } from "primereact/confirmdialog";
@@ -17,6 +18,7 @@ function App() {
               <Route path="/letters" element={<FileExplorerView />} />
               <Route path="/letters/:id" element={<LetterEditor />} />
               <Route path="/new" element={<LetterEditor />} />
+              <Route path="/settings" element={<SettingsView />} />
               <Route path="*" element={<Navigate to="/letters" replace />} />
             </Route>
           </Routes>

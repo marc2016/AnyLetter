@@ -47,6 +47,8 @@ export function useShellBreadcrumb(): { home: MenuItem; items: MenuItem[] } {
       items.push({
         label: draft?.subject?.trim() || t("untitled"),
       });
+    } else if (viewKind === "settings") {
+      items.push({ label: t("settings") });
     }
 
     return { home, items };

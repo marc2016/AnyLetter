@@ -1,14 +1,4 @@
-# desktop-shell Specification
-
-## Purpose
-TBD - created by archiving change build-letter-app-tauri-react. Update Purpose after archive.
-## Requirements
-### Requirement: Launch desktop shell with letter workspace
-The system SHALL start as a desktop application window and load the React letter workspace as the primary interface.
-
-#### Scenario: User launches the application
-- **WHEN** the user opens the installed app
-- **THEN** the system shows a desktop window containing the letter list and editor navigation
+## MODIFIED Requirements
 
 ### Requirement: Application shell menubar chrome
 The system SHALL render a PrimeReact Menubar as the persistent top application chrome and unified window title row, visible on all core views (file explorer, letter editor, and settings).
@@ -42,13 +32,6 @@ The system MUST provide navigation between core views, including draft list, edi
 - **WHEN** the user opens settings from the Menubar and then activates the home breadcrumb control
 - **THEN** the system navigates to the file explorer root view
 
-### Requirement: Preserve unsaved user work during session
-The system SHALL prevent accidental session data loss by synchronizing draft state changes before app window close completes.
-
-#### Scenario: User closes the app after editing
-- **WHEN** the user closes the app window with recently changed draft content
-- **THEN** the system persists pending draft changes before shutdown completes
-
 ### Requirement: Unified window title chrome
 The system SHALL present a single top chrome row that combines window controls with the application Menubar on all supported desktop platforms. A separate visible system title bar showing duplicate application title text SHALL NOT appear above the Menubar.
 
@@ -73,4 +56,3 @@ The unified chrome SHALL support window dragging from designated non-interactive
 #### Scenario: User drags window from chrome
 - **WHEN** the user drags a designated non-interactive region of the unified chrome
 - **THEN** the application window moves
-

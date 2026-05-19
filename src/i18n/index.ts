@@ -7,12 +7,14 @@ import deExplorer from "../locales/de/explorer.json";
 import deEditor from "../locales/de/editor.json";
 import deBreadcrumb from "../locales/de/breadcrumb.json";
 import dePreview from "../locales/de/preview.json";
+import deSettings from "../locales/de/settings.json";
 
 import enCommon from "../locales/en/common.json";
 import enExplorer from "../locales/en/explorer.json";
 import enEditor from "../locales/en/editor.json";
 import enBreadcrumb from "../locales/en/breadcrumb.json";
 import enPreview from "../locales/en/preview.json";
+import enSettings from "../locales/en/settings.json";
 
 export const APP_LOCALE_STORAGE_KEY = "app.locale";
 export const SUPPORTED_LANGUAGES = ["de", "en"] as const;
@@ -25,6 +27,7 @@ const resources = {
     editor: deEditor,
     breadcrumb: deBreadcrumb,
     preview: dePreview,
+    settings: deSettings,
   },
   en: {
     common: enCommon,
@@ -32,6 +35,7 @@ const resources = {
     editor: enEditor,
     breadcrumb: enBreadcrumb,
     preview: enPreview,
+    settings: enSettings,
   },
 };
 
@@ -44,7 +48,7 @@ void i18n
     fallbackLng: "en",
     load: "languageOnly",
     defaultNS: "common",
-    ns: ["common", "explorer", "editor", "breadcrumb", "preview"],
+    ns: ["common", "explorer", "editor", "breadcrumb", "preview", "settings"],
     detection: {
       order: ["localStorage", "navigator"],
       lookupLocalStorage: APP_LOCALE_STORAGE_KEY,

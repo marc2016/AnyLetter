@@ -79,7 +79,8 @@ html, body, #root {
 .app-shell-titlebar--macos .p-dropdown,
 .app-shell-titlebar--macos .p-dropdown *,
 .app-shell-titlebar--macos .p-breadcrumb .p-menuitem-link,
-.app-shell-titlebar--macos .app-shell-window-control {
+.app-shell-titlebar--macos .app-shell-window-control,
+.app-shell-titlebar--macos .app-shell-settings-button {
   pointer-events: auto;
 }
 
@@ -172,6 +173,46 @@ html, body, #root {
 
 .app-shell-titlebar .app-language-selector .p-dropdown-trigger {
   color: var(--app-shell-chrome-fg-muted);
+}
+
+.app-shell-settings-button {
+  width: 1.75rem;
+  height: 1.5rem;
+  padding: 0;
+  color: var(--app-shell-chrome-fg);
+}
+
+.app-shell-titlebar .app-shell-settings-button:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--app-shell-chrome-fg);
+}
+
+.app-settings-page {
+  padding: 2rem;
+}
+
+.app-settings-panel {
+  max-width: 28rem;
+}
+
+.app-settings-title {
+  margin: 0 0 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.app-settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.app-settings-label {
+  font-weight: 600;
+}
+
+.app-language-selector--settings {
+  max-width: 16rem;
 }
 
 .app-lang-flag {

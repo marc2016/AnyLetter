@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export type ShellViewKind = "explorer" | "editor-new" | "editor-draft";
+export type ShellViewKind = "explorer" | "editor-new" | "editor-draft" | "settings";
 
 interface ShellNavigationContextType {
   explorerFolderId: string | null;
@@ -27,6 +27,9 @@ export function ShellNavigationProvider({ children }: { children: ReactNode }) {
   const [explorerFolderId, setExplorerFolderId] = useState<string | null>(null);
 
   const viewKind = useMemo((): ShellViewKind => {
+    if (location.pathname === "/settings") {
+      return "settings";
+    }
     if (location.pathname === "/new") {
       return "editor-new";
     }

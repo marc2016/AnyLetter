@@ -5,7 +5,7 @@ import { useShellNavigation } from "../../context/ShellNavigationContext";
 import { useShellBreadcrumb } from "../../hooks/useShellBreadcrumb";
 import { isTauriDesktop, usesMacOsOverlayTitlebar } from "../../utils/platform";
 import { AppShellTitlebar } from "./AppShellTitlebar";
-import { LanguageSelector } from "./LanguageSelector";
+import { SettingsButton } from "./SettingsButton";
 import { WindowControls } from "./WindowControls";
 
 export function AppLayout() {
@@ -53,7 +53,7 @@ export function AppLayout() {
   const end = (
     <div className="flex align-items-center gap-2 shrink-0">
       <WindowControls />
-      <LanguageSelector />
+      <SettingsButton />
     </div>
   );
 
