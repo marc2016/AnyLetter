@@ -1,4 +1,10 @@
-import { useCallback, useRef, useState } from "react";
+import {
+  useCallback,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type RefObject,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "primereact/button";
 import { Toast } from "primereact/toast";
@@ -12,9 +18,49 @@ import {
   layoutFontSizeToCqw,
   layoutToPreviewPercent,
   mmToTopPercent,
+  PAGE_MM,
 } from "../../../pdf/dinLayout";
 
-const PREVIEW_PAGE_SCALE = 0.88;
+const PREVIEW_PADDING_PX = 16;
+
+function useFitToContainerScale(
+  containerRef: RefObject<HTMLDivElement | null>,
+  measureRef: RefObject<HTMLDivElement | null>,
+) {
+  const [scale, setScale] = useState(1);
+
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    const measure = measureRef.current;
+    if (!container || !measure) {
+      return;
+    }
+
+    const updateScale = () => {
+      const pageWidth = measure.offsetWidth;
+      const pageHeight = measure.offsetHeight;
+      if (pageWidth === 0 || pageHeight === 0) {
+        return;
+      }
+
+      const availableWidth = container.clientWidth - PREVIEW_PADDING_PX * 2;
+      const availableHeight = container.clientHeight - PREVIEW_PADDING_PX * 2;
+      const fitScale = Math.min(
+        availableWidth / pageWidth,
+        availableHeight / pageHeight,
+      );
+      setScale(fitScale > 0 ? fitScale : 1);
+    };
+
+    updateScale();
+    const observer = new ResizeObserver(updateScale);
+    observer.observe(container);
+    observer.observe(measure);
+    return () => observer.disconnect();
+  }, [containerRef, measureRef]);
+
+  return scale;
+}
 
 interface LetterPreviewProps {
   data: LetterData;
@@ -29,6 +75,9 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
   const { t, i18n } = useTranslation("preview");
   const [isExporting, setIsExporting] = useState(false);
   const toastRef = useRef<Toast>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const pageMeasureRef = useRef<HTMLDivElement>(null);
+  const pageScale = useFitToContainerScale(containerRef, pageMeasureRef);
   const displayDate = data.date ? formatAppDate(data.date) : formatAppDate(new Date());
 
   const handleExport = useCallback(async () => {
@@ -60,7 +109,8 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
     <div className="relative w-full h-full">
       <Toast ref={toastRef} />
       <div
-        className="w-full h-full overflow-auto flex align-items-start justify-content-center p-4"
+        ref={containerRef}
+        className="w-full h-full overflow-hidden flex align-items-center justify-content-center p-4"
         style={{
           backgroundImage: `url(${woodBackground})`,
           backgroundSize: "cover",
@@ -68,6 +118,16 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
           backgroundRepeat: "no-repeat",
         }}
       >
+        <div
+          ref={pageMeasureRef}
+          aria-hidden
+          className="absolute pointer-events-none"
+          style={{
+            width: `${PAGE_MM.width}mm`,
+            height: `${PAGE_MM.height}mm`,
+            visibility: "hidden",
+          }}
+        />
         <style>{`
         .preview-field {
           transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -96,21 +156,17 @@ export function LetterPreview({ data, focusedField }: LetterPreviewProps) {
 
         <div
           style={{
-            width: `calc(210mm * ${PREVIEW_PAGE_SCALE})`,
-            height: `calc(297mm * ${PREVIEW_PAGE_SCALE})`,
-            minWidth: `calc(210mm * ${PREVIEW_PAGE_SCALE})`,
-            minHeight: `calc(297mm * ${PREVIEW_PAGE_SCALE})`,
+            width: `calc(${PAGE_MM.width}mm * ${pageScale})`,
+            height: `calc(${PAGE_MM.height}mm * ${pageScale})`,
             flexShrink: 0,
           }}
         >
           <div
             className="bg-white shadow-4 relative overflow-hidden select-none"
             style={{
-              width: "210mm",
-              height: "297mm",
-              minWidth: "210mm",
-              minHeight: "297mm",
-              transform: `scale(${PREVIEW_PAGE_SCALE})`,
+              width: `${PAGE_MM.width}mm`,
+              height: `${PAGE_MM.height}mm`,
+              transform: `scale(${pageScale})`,
               transformOrigin: "top left",
               containerType: "inline-size",
               color: "#000000",
