@@ -10,11 +10,11 @@ html, body, #root {
 }
 
 .app-shell-titlebar {
-  --app-shell-chrome-bg: #7a2222;
-  --app-shell-chrome-border: #4d1515;
-  --app-shell-chrome-fg: #faf3f3;
-  --app-shell-chrome-fg-muted: #ecd6d6;
-  --app-shell-chrome-accent: #f8d4d4;
+  --app-shell-chrome-bg: var(--blue-800);
+  --app-shell-chrome-border: var(--blue-900);
+  --app-shell-chrome-fg: var(--primary-color-text);
+  --app-shell-chrome-fg-muted: var(--blue-200);
+  --app-shell-chrome-accent: var(--blue-100);
   position: relative;
   flex-shrink: 0;
   user-select: none;
@@ -39,7 +39,7 @@ html, body, #root {
   padding-bottom: 0.125rem;
   border: none;
   border-bottom: 1px solid var(--app-shell-chrome-border);
-  background: var(--app-shell-chrome-bg);
+  background: var(--app-shell-chrome-bg) !important;
   color: var(--app-shell-chrome-fg);
 }
 
@@ -166,9 +166,9 @@ html, body, #root {
 
 .app-shell-titlebar .app-language-selector.p-dropdown,
 .app-shell-titlebar .app-language-selector .p-dropdown-label {
-  background: rgba(0, 0, 0, 0.15);
+  background: var(--surface-card);
   border-color: var(--app-shell-chrome-border);
-  color: var(--app-shell-chrome-fg);
+  color: var(--text-color);
 }
 
 .app-shell-titlebar .app-language-selector .p-dropdown-trigger {
